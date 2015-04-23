@@ -14,7 +14,7 @@ import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.utiles.Teclado;
  * coches (todo el concesionario)
  * 
  * @author Emanuel Galvan Fontalba
- * 
+ * @deprecated
  */
 public class TestConcesionario{
 	static Menu menu = new Menu("Concesionario de coches", new String[] {

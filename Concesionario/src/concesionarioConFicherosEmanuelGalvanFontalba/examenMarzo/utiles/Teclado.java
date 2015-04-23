@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 /**
  * Permite lectura desde teclado
+ * @deprecated
  */
 public class Teclado {
 

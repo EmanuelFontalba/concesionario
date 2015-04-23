@@ -11,9 +11,6 @@ import java.io.ObjectOutputStream;
 import java.util.regex.Pattern;
 
 public class GestionFicheros {
-	
-	private Pattern patronExtension = Pattern.compile(".obj$");
-
 	static void guardar(Object object, String archivoName)throws IOException {
 		File archivo ;
 		if(extensionValida(archivoName)){

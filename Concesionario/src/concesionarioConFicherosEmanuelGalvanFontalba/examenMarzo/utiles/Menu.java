@@ -9,8 +9,8 @@ package concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.utiles;
  * 
  * <li>Recoger y devolver las opciones de un menú
  * 
- * @author mlmc
- * 
+ * @author Emanuel Galvan Fontalba
+ * @deprecated
  */
 public class Menu {
 	String titulo = null;

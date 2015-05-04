@@ -11,26 +11,16 @@ import java.io.ObjectOutputStream;
 import java.util.regex.Pattern;
 
 public class GestionFicheros {
-	static void guardar(Object object, String archivoName)throws IOException {
-		File archivo ;
-		if(extensionValida(archivoName)){
-			archivo = new File(archivoName);
-		}
-		else{
-			archivo = new File(archivoName + ".obj");
-		}
+	public static void guardar(Object object, File archivo)throws IOException {
+		File archivoNuevo = archivo;
 		try (ObjectOutputStream escrituraObjeto = new ObjectOutputStream(
-				new BufferedOutputStream(new FileOutputStream(archivo)));) {
+				new BufferedOutputStream(new FileOutputStream(archivoNuevo)));) {
 			escrituraObjeto.writeObject(object);
 		}
 	}
 
-	static Object abrir(String archivoName) throws ClassNotFoundException, IOException {
-		File archivo ;
-		if(extensionValida(archivoName))
-			archivo = new File(archivoName);
-		else
-			archivo = new File(archivoName + ".obj");
+	public static Object abrir(File archivo) throws ClassNotFoundException, IOException {
+		File archivoNuevo = archivo;
 		try (ObjectInputStream lecturaObjeto = new ObjectInputStream(
 				new BufferedInputStream(new FileInputStream(archivo)))) {
 			return lecturaObjeto.readObject();

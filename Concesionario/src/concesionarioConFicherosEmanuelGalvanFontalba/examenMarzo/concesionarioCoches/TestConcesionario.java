@@ -25,22 +25,22 @@ public class TestConcesionario{
 			Color.generarOpcionesMenu());
 	private static Menu menuModelos = new Menu("Modelos de los coches",
 			Modelo.generarOpcionesMenu());
-	static Concesionario concesionario = new Concesionario();//otro conc vacio
-	static String ultimoNombre="";//
-	static boolean guardado=false;//false
+	static Concesionario concesionario = new Concesionario();
+	static String ultimoNombre="";
+	static boolean guardado=false;
 
 	public static void main(String[] args) {
 		do {
 			switch (menu.gestionar()) {
-			case 1:// "Añadir Coche
-				annadirCoche();
-				break;
-			case 2:// Eliminar Coche
-				eliminarCoche();
-				break;
-			case 3:// Obtener Coche
-				getCoche();
-				break;
+//			case 1:// "Añadir Coche
+//				annadirCoche();
+//				break;
+//			case 2:// Eliminar Coche
+//				eliminarCoche();
+//				break;
+//			case 3:// Obtener Coche
+//				getCoche();
+//				break;
 			case 4:// Mostrar lista
 				System.out.println(concesionario);
 				break;
@@ -48,107 +48,107 @@ public class TestConcesionario{
 				System.out.println("Número de coches en el concesionario: "
 						+ concesionario.size());
 				break;
-			case 6:// Mostrar coches de un color
-				System.out.println(concesionario.getCochesColor(pedirColor()));
-				break;
-			case 7:
-				manejoFicheros();
-				break;
-			default:// Salir
-				System.out.println("Aaaaaaaaaaaaaaaaaaaaadios");
-				return;
+//			case 6:// Mostrar coches de un color
+//				System.out.println(concesionario.getCochesColor(pedirColor()));
+//				break;
+//			case 7:
+//				manejoFicheros();
+//				break;
+//			default:// Salir
+//				System.out.println("Aaaaaaaaaaaaaaaaaaaaadios");
+//				return;
 			}
 		} while (true);
 	}
 
-	private static void manejoFicheros() {
-		Menu menuFicheros = new Menu("Archivo", new String[] {
-			"Nuevo", "Abrir", "Guardar", "Guardar como", "Salir" });
-		String nombreActual="";
-		switch (menuFicheros.gestionar()) {
-		case 1:
-			if(modificarCambios()){
-				concesionario=new Concesionario();
-				guardado=false;
-				ultimoNombre="";
-				break;
-			}
-			if(quieresGuardar()){
-				if(guardado)
-					try {
-						if(modificarCambios()){
-							GestionFicheros.guardar(concesionario,ultimoNombre);
-						}
-					} catch (IOException e1) {
-						System.out.println(e1);
-					}
-				else
-					try {
-						ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
-						GestionFicheros.guardar(concesionario, ultimoNombre);
-						guardado=true;
-					} catch (IOException e1) {
-						System.out.println(e1);
-					}
-				if(quieresCrear()){
-					concesionario=new Concesionario();
-					guardado=false;
-					ultimoNombre="";
-					break;
-				}
-				break;
-			}
-			break;
-		case 2:
-			try {
-				ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
-				concesionario=(Concesionario)GestionFicheros.abrir(ultimoNombre);
-				System.out.println("El concesionario se ha abierto con exito");
-				guardado=true;
-			} catch (ClassNotFoundException | IOException e1) {
-				System.out.println(e1);
-				System.err.println("El concesionario no se ha podido abrir");
-			}
-			break;
-		case 3:
-			if(guardado)
-				try {
-					if(modificarCambios()){
-						GestionFicheros.guardar(concesionario,ultimoNombre);
-					}
-				} catch (IOException e1) {
-					System.out.println(e1);
-				}
-			else
-				try {
-					ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
-					GestionFicheros.guardar(concesionario, ultimoNombre);
-					guardado=true;
-				} catch (IOException e1) {
-					System.out.println(e1);
-				}
-			break;
-		case 4:
-			try {
-				nombreActual=Teclado.leerCadena("Introduce el nombre del archivo");
-				if(ultimoNombre.equals(nombreActual))
-					if(modificarCambios()){
-						GestionFicheros.guardar(concesionario,ultimoNombre);
-						guardado=true;
-					}else break;
-				else{
-					ultimoNombre=nombreActual;
-					GestionFicheros.guardar(concesionario, nombreActual);
-					guardado=true;
-				}
-			} catch (IOException e) {
-				System.out.println(e);
-			}
-			break;
-		default:
-			break;
-		}
-	}
+//	private static void manejoFicheros() {
+//		Menu menuFicheros = new Menu("Archivo", new String[] {
+//			"Nuevo", "Abrir", "Guardar", "Guardar como", "Salir" });
+//		String nombreActual="";
+//		switch (menuFicheros.gestionar()) {
+//		case 1:
+//			if(modificarCambios()){
+//				concesionario=new Concesionario();
+//				guardado=false;
+//				ultimoNombre="";
+//				break;
+//			}
+//			if(quieresGuardar()){
+//				if(guardado)
+//					try {
+//						if(modificarCambios()){
+//							GestionFicheros.guardar(concesionario,ultimoNombre);
+//						}
+//					} catch (IOException e1) {
+//						System.out.println(e1);
+//					}
+//				else
+//					try {
+//						ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
+//						GestionFicheros.guardar(concesionario, ultimoNombre);
+//						guardado=true;
+//					} catch (IOException e1) {
+//						System.out.println(e1);
+//					}
+//				if(quieresCrear()){
+//					concesionario=new Concesionario();
+//					guardado=false;
+//					ultimoNombre="";
+//					break;
+//				}
+//				break;
+//			}
+//			break;
+//		case 2:
+//			try {
+//				ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
+//				concesionario=(Concesionario)GestionFicheros.abrir(ultimoNombre);
+//				System.out.println("El concesionario se ha abierto con exito");
+//				guardado=true;
+//			} catch (ClassNotFoundException | IOException e1) {
+//				System.out.println(e1);
+//				System.err.println("El concesionario no se ha podido abrir");
+//			}
+//			break;
+//		case 3:
+//			if(guardado)
+//				try {
+//					if(modificarCambios()){
+//						GestionFicheros.guardar(concesionario,ultimoNombre);
+//					}
+//				} catch (IOException e1) {
+//					System.out.println(e1);
+//				}
+//			else
+//				try {
+//					ultimoNombre=Teclado.leerCadena("Introduce el nombre del archivo");
+//					GestionFicheros.guardar(concesionario, ultimoNombre);
+//					guardado=true;
+//				} catch (IOException e1) {
+//					System.out.println(e1);
+//				}
+//			break;
+//		case 4:
+//			try {
+//				nombreActual=Teclado.leerCadena("Introduce el nombre del archivo");
+//				if(ultimoNombre.equals(nombreActual))
+//					if(modificarCambios()){
+//						GestionFicheros.guardar(concesionario,ultimoNombre);
+//						guardado=true;
+//					}else break;
+//				else{
+//					ultimoNombre=nombreActual;
+//					GestionFicheros.guardar(concesionario, nombreActual);
+//					guardado=true;
+//				}
+//			} catch (IOException e) {
+//				System.out.println(e);
+//			}
+//			break;
+//		default:
+//			break;
+//		}
+//	}
 	private static boolean quieresCrear() {
 		char decision;
 
@@ -217,16 +217,16 @@ public class TestConcesionario{
 		}
 
 	}
-
-	private static void annadirCoche() {
-		try {
-			concesionario.annadir(Teclado.leerCadena("Introduce la matrícula"),
-					pedirColor(), pedirModelo());
-			System.out.println("Coche añadido con éxito");
-		} catch (Exception e) {
-			System.out.println(e);
-		}	
-	}
+//
+//	private static void annadirCoche() {
+//		try {
+//			concesionario.annadir(Teclado.leerCadena("Introduce la matrícula"),
+//					pedirColor(), pedirModelo());
+//			System.out.println("Coche añadido con éxito");
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}	
+//	}
 
 	private static Modelo pedirModelo() {
 		int opcion = menuModelos.gestionar();

@@ -26,7 +26,7 @@ public enum Modelo {
 	}
 
 	public String toString() {
-		return name() + ", " + getMarca();
+		return name();
 
 	}
 

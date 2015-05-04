@@ -1,5 +1,6 @@
 package concesionarioConFicherosEmanuelGalvanFontalba.entornoGrafico;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,13 +8,39 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.Coche;
+import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.Concesionario;
+import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.GestionFicheros;
+import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.utiles.Teclado;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.KeyStroke;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class VentanaPrincipal {
-
+	
+	static Concesionario concesionario = new Concesionario();
+	static File archivoElegido;
+	static boolean guardado=false;
+	static boolean modificado = false;
 	private JFrame frmConcesionarioDeCoches;
+	private Component contentPane;
+	
+	static ArrayList<Coche> concesionarioDeUnColor = new ArrayList<Coche>();
+	private static Component parentComponent;
 
 	/**
 	 * Launch the application.
@@ -50,48 +77,210 @@ public class VentanaPrincipal {
 		JMenuBar menuBar = new JMenuBar();
 		frmConcesionarioDeCoches.setJMenuBar(menuBar);
 		
-		JMenu archivo = new JMenu("Archivo");
+		JMenu archivo = new JMenu("Ficheros");
+		archivo.setMnemonic('F');
 		menuBar.add(archivo);
 		
 		JMenuItem archivoNuevo = new JMenuItem("Nuevo");
+		archivoNuevo.addActionListener(new ActionListener() {
+			
+
+			public void actionPerformed(ActionEvent arg0) {
+				if(modificado){
+					Nuevo nuevo = new Nuevo();
+					nuevo.setVisible(true);
+				}
+				else{
+					concesionario=new Concesionario();
+					guardado=false;
+					modificado=false;
+					JOptionPane.showMessageDialog(parentComponent, "Concesionario creado con éxito");
+				}
+
+			}
+		});
+		archivoNuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		archivo.add(archivoNuevo);
 		
 		JMenuItem archivoAbrir = new JMenuItem("Abrir");
+		archivoAbrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		archivoAbrir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Abrir menuAbrir= new Abrir();
+					concesionario=(Concesionario)GestionFicheros.abrir(archivoElegido);
+					guardado=true;
+					modificado = false;
+				} catch (ClassNotFoundException | IOException e1) {
+					JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		archivo.add(archivoAbrir);
 		
 		JMenuItem archivoGuardar = new JMenuItem("Guardar");
+		archivoGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(guardado)
+					if(modificado)
+						try {
+							if(modificarCambios() == JOptionPane.YES_OPTION){
+								GestionFicheros.guardar(concesionario,archivoElegido);
+								modificado = false;
+							}
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+					else
+						try {
+							GestionFicheros.guardar(concesionario,archivoElegido);
+							modificado=false;
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+				else
+					try {
+						GuardarComo menuGuardarComo = new GuardarComo();
+						GestionFicheros.guardar(concesionario,archivoElegido);
+						guardado=true;
+						modificado = false;
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+					}		
+			}
+		});
+		archivoGuardar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		archivo.add(archivoGuardar);
 		
 		JMenuItem archivoGuardarComo = new JMenuItem("Guardar como ...");
-		archivo.add(archivoGuardarComo);
-		frmConcesionarioDeCoches.getContentPane().setLayout(null);
-		
-		JButton altaCoche = new JButton("Alta coche");
-		altaCoche.addActionListener(new ActionListener() {
+		archivoGuardarComo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		archivoGuardarComo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					GuardarComo menuGuardarComo = new GuardarComo();
+					GestionFicheros.guardar(concesionario,archivoElegido);
+					guardado=true;
+					modificado = false;
+				} catch (IOException e) {
+					System.out.println(e);
+				}
 			}
 		});
-		altaCoche.setBounds(10, 11, 112, 23);
-		frmConcesionarioDeCoches.getContentPane().add(altaCoche);
+		archivo.add(archivoGuardarComo);
 		
-		JButton bajaCoche = new JButton("Baja coche");
-		bajaCoche.setBounds(132, 11, 112, 23);
-		frmConcesionarioDeCoches.getContentPane().add(bajaCoche);
+		JMenu concesionarioMenu = new JMenu("Coches");
+		concesionarioMenu.setMnemonic('C');
+		menuBar.add(concesionarioMenu);
 		
-		JButton mostrarCoche = new JButton("Mostrar coche");
-		mostrarCoche.setBounds(254, 11, 170, 23);
-		frmConcesionarioDeCoches.getContentPane().add(mostrarCoche);
+		JMenuItem annadirCoche = new JMenuItem("A\u00F1adir");
+		annadirCoche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Annadir annadir = new Annadir();
+				annadir.setVisible(true);
+				modificado = true;
+			}
+		});
+		annadirCoche.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		concesionarioMenu.add(annadirCoche);
 		
-		JButton contarCoches = new JButton("Contar coches");
-		contarCoches.setBounds(10, 80, 189, 23);
-		frmConcesionarioDeCoches.getContentPane().add(contarCoches);
+		JMenuItem eliminarCoche = new JMenuItem("Eliminar");
+		eliminarCoche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Eliminar eliminar = new Eliminar();
+				eliminar.setVisible(true);
+				modificado = true;
+			}
+		});
+		eliminarCoche.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
+		concesionarioMenu.add(eliminarCoche);
 		
-		JButton cochesDeUnColor = new JButton("Mostrar coches de un color");
-		cochesDeUnColor.setBounds(209, 80, 215, 23);
-		frmConcesionarioDeCoches.getContentPane().add(cochesDeUnColor);
+		JMenu mnBuscar = new JMenu("Buscar");
+		mnBuscar.setMnemonic('S');
+		concesionarioMenu.add(mnBuscar);
 		
-		JButton mostrarConcesionario = new JButton("Mostrar concesionario");
-		mostrarConcesionario.setBounds(10, 152, 414, 78);
-		frmConcesionarioDeCoches.getContentPane().add(mostrarConcesionario);
+		JMenuItem mntmPorMatrcula = new JMenuItem("Por matr\u00EDcula");
+		mntmPorMatrcula.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BuscarPorMatricula buscarPorMatricula= new BuscarPorMatricula();
+				buscarPorMatricula.setVisible(true);
+			}
+		});
+		mntmPorMatrcula.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK));
+		mnBuscar.add(mntmPorMatrcula);
+		
+		JMenuItem mntmPorColor = new JMenuItem("Por color");
+		mntmPorColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BuscarPorColor buscarPorColor = new BuscarPorColor();
+				buscarPorColor.setVisible(true);
+			}
+		});
+		mntmPorColor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mnBuscar.add(mntmPorColor);
+		
+		JMenuItem mntmMostrar = new JMenuItem("Mostrar todos");
+		mntmMostrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MostrarConcesionario mostrar = new MostrarConcesionario();
+				mostrar.setVisible(true);
+			}
+		});
+		mntmMostrar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
+		concesionarioMenu.add(mntmMostrar);
+		
+		JMenuItem mntmContar = new JMenuItem("Contar");
+		mntmContar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Contar contar = new Contar();
+				contar.setVisible(true);
+			}
+		});
+		mntmContar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		concesionarioMenu.add(mntmContar);
+		
+		JMenu mnAyuda = new JMenu("Ayuda");
+		mnAyuda.setMnemonic('A');
+		menuBar.add(mnAyuda);
+		
+		JMenuItem mntmVerAyuda = new JMenuItem("Ver ayuda");
+		mntmVerAyuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(parentComponent, "¿En serio necesitas ayuda para usar esto?!!!!", "Ayuda", JOptionPane.OK_OPTION);
+			}
+		});
+		mnAyuda.add(mntmVerAyuda);
+		
+		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Acerca acerca = new Acerca();
+				acerca.setVisible(true);
+			}
+		});
+		mnAyuda.add(mntmAcercaDe);
+		frmConcesionarioDeCoches.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Azahara\\git\\concesionario\\Concesionario\\650_1200.jpg"));
+		lblNewLabel.setBounds(-80, -127, 562, 368);
+		frmConcesionarioDeCoches.getContentPane().add(lblNewLabel);
+	}
+
+	protected int quieresCrear() {
+		return JOptionPane.showConfirmDialog(parentComponent, "¿Quieres crear un nuevo concesionario ahora?", "Nuevo concesionario" , JOptionPane.YES_NO_OPTION);
+	
+	}
+
+	public static Concesionario getConcesionario() {
+		return concesionario;
+	}
+	
+	private static int modificarCambios() {
+		return JOptionPane.showConfirmDialog(parentComponent, "Se va a perder información. ¿Quieres continuar?", "Sobreescritura" , JOptionPane.YES_NO_OPTION);
+	}
+	
+	private int quieresGuardar() {
+		return JOptionPane.showConfirmDialog(parentComponent, "¿Quieres guardar el concesionario?", "Guardar" , JOptionPane.YES_NO_OPTION);
+	
 	}
 }

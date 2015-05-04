@@ -69,7 +69,7 @@ public class Coche implements Serializable {
 	 * 
 	 * @return Devuelve el campo color.
 	 */
-	Color getColor() {
+	public Color getColor() {
 		return color;
 	}
 	
@@ -136,6 +136,14 @@ public class Coche implements Serializable {
 	public String toString() {
 		return "\nCoche [matricula=" + matricula + ", color=" + color
 				+ ", modelo=" + modelo + "]";
+	}
+
+	public Modelo getModelo() {
+		return this.modelo;
+	}
+	
+	public String getMatricula(){
+		return this.matricula;
 	}
 
 }

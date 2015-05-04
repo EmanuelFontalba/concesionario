@@ -26,21 +26,21 @@ public class Concesionario implements Serializable {
 	private ArrayList<Coche> almacen = new ArrayList<Coche>();
 	private final String nombre = "IES Gran Capitán";
 
-	void annadir(String matricula, Color color, Modelo modelo) throws Exception{ //throws MatriculaInvalidaException, ColorInvalidoException, ModeloInvalidException, ExisteElCocheException {
+	public void annadir(String matricula, Color color, Modelo modelo) throws Exception{ //throws MatriculaInvalidaException, ColorInvalidoException, ModeloInvalidException, ExisteElCocheException {
 		Coche coche = new Coche(matricula, color, modelo);
 		if (almacen.contains(coche))
 			throw new CocheYaExisteException("El coche ya está en el almacen");
 		almacen.add(coche);
 	}
 
-	void eliminar(String matricula) throws MatriculaInvalidaException, CocheNoExisteException{
+	public void eliminar(String matricula) throws MatriculaInvalidaException, CocheNoExisteException{
 		if(almacen.remove(new Coche(matricula)))
 			return;
 		else throw new CocheNoExisteException("El coche no existe");
 	}
 
 	
-	int size() {
+	public int size() {
 		return almacen.size();
 	}
 
@@ -53,13 +53,17 @@ public class Concesionario implements Serializable {
 	 * @throws MatriculaInvalidaException Matricula invalida
 	 * @throws CocheNoExisteException 
 	 */
-	Coche get(String matricula) throws MatriculaInvalidaException, CocheNoExisteException{
+	public Coche get(String matricula) throws MatriculaInvalidaException, CocheNoExisteException{
 		Coche coche = new Coche(matricula);
 		int index = almacen.indexOf(coche);
 		if (index != -1) {
 			return almacen.get(index);
 		}
 		throw new CocheNoExisteException("El coche no existe");
+	}
+	
+	public Coche get(int position){
+		return almacen.get(position);
 	}
 
 	/*

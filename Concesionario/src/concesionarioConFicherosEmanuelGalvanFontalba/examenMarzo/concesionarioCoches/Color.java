@@ -7,6 +7,7 @@ package concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioC
  * @version 1.0
  */
 public enum Color {
+	//comentario para probar colaboración con propietario en GitHub
 	/**
 	 * Color plata.
 	 */

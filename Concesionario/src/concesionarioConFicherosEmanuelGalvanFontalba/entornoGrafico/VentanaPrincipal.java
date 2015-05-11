@@ -7,16 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.Coche;
 import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.Concesionario;
 import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.concesionarioCoches.GestionFicheros;
-import concesionarioConFicherosEmanuelGalvanFontalba.examenMarzo.utiles.Teclado;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -70,7 +66,10 @@ public class VentanaPrincipal {
 	 */
 	private void initialize() {
 		frmConcesionarioDeCoches = new JFrame();
-		frmConcesionarioDeCoches.setTitle("Concesionario de coches");
+		if(archivoElegido!=null)
+			frmConcesionarioDeCoches.setTitle("Concesionario de coches. - "+ archivoElegido.getName());
+		else
+			frmConcesionarioDeCoches.setTitle("Concesionario de coches. - Sin título");
 		frmConcesionarioDeCoches.setBounds(100, 100, 450, 300);
 		frmConcesionarioDeCoches.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -89,17 +88,23 @@ public class VentanaPrincipal {
 				if(modificado){
 					Nuevo nuevo = new Nuevo();
 					nuevo.setVisible(true);
+					archivoElegido=null;
 				}
 				else{
 					concesionario=new Concesionario();
 					guardado=false;
 					modificado=false;
+					archivoElegido=null;
 					JOptionPane.showMessageDialog(parentComponent, "Concesionario creado con éxito");
 				}
+				if(archivoElegido!=null)
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - "+ archivoElegido.getName());
+				else
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - Sin título");
 
 			}
 		});
-		archivoNuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		archivoNuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
 		archivo.add(archivoNuevo);
 		
 		JMenuItem archivoAbrir = new JMenuItem("Abrir");
@@ -108,12 +113,18 @@ public class VentanaPrincipal {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Abrir menuAbrir= new Abrir();
+					if(archivoElegido==null)
+						return;
 					concesionario=(Concesionario)GestionFicheros.abrir(archivoElegido);
 					guardado=true;
 					modificado = false;
 				} catch (ClassNotFoundException | IOException e1) {
 					JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
+				if(archivoElegido!=null)
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - "+ archivoElegido.getName());
+				else
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - Sin título");
 			}
 		});
 		archivo.add(archivoAbrir);
@@ -141,12 +152,18 @@ public class VentanaPrincipal {
 				else
 					try {
 						GuardarComo menuGuardarComo = new GuardarComo();
+						if(archivoElegido==null)
+							return;
 						GestionFicheros.guardar(concesionario,archivoElegido);
 						guardado=true;
 						modificado = false;
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(contentPane, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-					}		
+					}
+				if(archivoElegido!=null)
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - "+ archivoElegido.getName());
+				else
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - Sin título");
 			}
 		});
 		archivoGuardar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
@@ -158,12 +175,18 @@ public class VentanaPrincipal {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					GuardarComo menuGuardarComo = new GuardarComo();
+					if(archivoElegido==null)
+						return;
 					GestionFicheros.guardar(concesionario,archivoElegido);
 					guardado=true;
 					modificado = false;
 				} catch (IOException e) {
 					System.out.println(e);
 				}
+				if(archivoElegido!=null)
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - "+ archivoElegido.getName());
+				else
+					frmConcesionarioDeCoches.setTitle("Concesionario de coches. - Sin título");
 			}
 		});
 		archivo.add(archivoGuardarComo);
@@ -221,8 +244,12 @@ public class VentanaPrincipal {
 		JMenuItem mntmMostrar = new JMenuItem("Mostrar todos");
 		mntmMostrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(concesionario.size()<=0){
+					JOptionPane.showMessageDialog(contentPane, "El concesionario está vacio", "ERROR", JOptionPane.ERROR_MESSAGE);
+				}else{
 				MostrarConcesionario mostrar = new MostrarConcesionario();
 				mostrar.setVisible(true);
+				}
 			}
 		});
 		mntmMostrar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));

@@ -14,7 +14,7 @@ public class GestionFicheros {
 	public static void guardar(Object object, File archivo)throws IOException {
 		File archivoNuevo = archivo;
 		try (ObjectOutputStream escrituraObjeto = new ObjectOutputStream(
-				new BufferedOutputStream(new FileOutputStream(archivoNuevo)));) {
+				new BufferedOutputStream(new FileOutputStream(extensionValida(archivoNuevo))));) {
 			escrituraObjeto.writeObject(object);
 		}
 	}
@@ -22,12 +22,15 @@ public class GestionFicheros {
 	public static Object abrir(File archivo) throws ClassNotFoundException, IOException {
 		File archivoNuevo = archivo;
 		try (ObjectInputStream lecturaObjeto = new ObjectInputStream(
-				new BufferedInputStream(new FileInputStream(archivo)))) {
+				new BufferedInputStream(new FileInputStream(extensionValida(archivo))))) {
 			return lecturaObjeto.readObject();
 		}
 	}
 	
-	private static boolean extensionValida(String archivoName){
-		return archivoName.contains(".obj");
+	private static File extensionValida(File archivo){
+		if(archivo.getPath().endsWith(".obj"))
+			return archivo;
+		else
+			return new File(archivo+".obj");
 	}
 }

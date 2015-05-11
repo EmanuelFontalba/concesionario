@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class VentanaPadre extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	JTextField matricula;
+	protected JTextField matricula;
 	final ButtonGroup buttonGroup = new ButtonGroup();
 	JComboBox<Modelo> comboBoxModelo;
 	JLabel etiquetaMatricula ;
